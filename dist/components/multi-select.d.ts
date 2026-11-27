@@ -1,0 +1,21 @@
+import { type SelectOption } from "../lib/select-options";
+export type MultiSelectProps<T extends string = string> = {
+    readonly value: readonly T[];
+    readonly options: readonly SelectOption<T>[];
+    readonly onValueChange: (value: T[]) => void;
+    readonly label?: string;
+    readonly placeholder?: string;
+    readonly searchPlaceholder?: string;
+    readonly emptyText?: string;
+    readonly maxVisibleTags?: number;
+    readonly maxSelected?: number;
+    readonly clearable?: boolean;
+    readonly showSelectAll?: boolean;
+    readonly disabled?: boolean;
+    readonly className?: string;
+    readonly contentClassName?: string;
+    readonly side?: "top" | "bottom";
+    readonly align?: "start" | "center" | "end";
+};
+declare function MultiSelect<T extends string = string>({ value, options, onValueChange, label, placeholder, searchPlaceholder, emptyText, maxVisibleTags, maxSelected, clearable, showSelectAll, disabled, className, contentClassName, side, align, }: MultiSelectProps<T>): import("react").JSX.Element;
+export { MultiSelect };

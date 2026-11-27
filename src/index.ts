@@ -62,6 +62,14 @@ export {
   HoverCardTrigger,
 } from "./components/hover-card";
 export { Input } from "./components/input";
+export {
+  ConfirmDialog,
+  type ConfirmDialogProps,
+  Modal,
+  type ModalProps,
+  type ModalSize,
+} from "./components/modal";
+export { MultiSelect, type MultiSelectProps } from "./components/multi-select";
 export { ScrollArea, ScrollBar } from "./components/scroll-area";
 export {
   DropdownContent,
@@ -69,6 +77,18 @@ export {
   SearchableDropdown,
   type SearchableDropdownOption,
 } from "./components/searchable-dropdown";
+export {
+  SearchableSelect,
+  type SearchableSelectProps,
+} from "./components/searchable-select";
+export {
+  filterSelectKeywords,
+  groupSelectOptions,
+  optionKeywords,
+  toggleSelection,
+  type OptionGroup,
+  type SelectOption,
+} from "./lib/select-options";
 export { Skeleton } from "./components/skeleton";
 export { Switch } from "./components/switch";
 export { Textarea } from "./components/textarea";

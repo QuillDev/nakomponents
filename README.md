@@ -16,10 +16,18 @@ Import the canonical theme once in your app's CSS entrypoint:
 @import "nakomponents/theme.css";
 ```
 
-Import primitives:
+Import primitives and plug-and-play controls:
 
 ```tsx
-import { Button, Dialog, DialogContent, Input, Switch } from "nakomponents";
+import {
+  Button,
+  ConfirmDialog,
+  Input,
+  Modal,
+  MultiSelect,
+  SearchableSelect,
+  Switch,
+} from "nakomponents";
 ```
 
 Extend the shared `oxlint` config in `.oxlintrc.json`:

@@ -1,0 +1,32 @@
+import { type ReactNode } from "react";
+export type ModalSize = "sm" | "md" | "lg" | "xl";
+export type ModalProps = {
+    readonly open?: boolean;
+    readonly onOpenChange?: (open: boolean) => void;
+    readonly trigger?: ReactNode;
+    readonly title: ReactNode;
+    readonly description?: ReactNode;
+    readonly children?: ReactNode;
+    readonly footer?: ReactNode;
+    readonly size?: ModalSize;
+    readonly responsive?: boolean;
+    readonly showCloseButton?: boolean;
+    readonly preventOutsideClose?: boolean;
+    readonly className?: string;
+    readonly bodyClassName?: string;
+};
+declare function Modal({ open, onOpenChange, trigger, title, description, children, footer, size, responsive, showCloseButton, preventOutsideClose, className, bodyClassName, }: ModalProps): import("react").JSX.Element;
+export type ConfirmDialogProps = {
+    readonly open?: boolean;
+    readonly onOpenChange?: (open: boolean) => void;
+    readonly trigger?: ReactNode;
+    readonly title: ReactNode;
+    readonly description?: ReactNode;
+    readonly confirmLabel?: string;
+    readonly cancelLabel?: string;
+    readonly variant?: "default" | "destructive";
+    readonly busy?: boolean;
+    readonly onConfirm: () => void | Promise<void>;
+};
+declare function ConfirmDialog({ open: controlledOpen, onOpenChange, trigger, title, description, confirmLabel, cancelLabel, variant, busy, onConfirm, }: ConfirmDialogProps): import("react").JSX.Element;
+export { ConfirmDialog, Modal };

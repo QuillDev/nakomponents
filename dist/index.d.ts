@@ -9,8 +9,12 @@ export { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 export { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, } from "./components/dropdown-menu";
 export { HoverCard, HoverCardContent, HoverCardTrigger, } from "./components/hover-card";
 export { Input } from "./components/input";
+export { ConfirmDialog, type ConfirmDialogProps, Modal, type ModalProps, type ModalSize, } from "./components/modal";
+export { MultiSelect, type MultiSelectProps } from "./components/multi-select";
 export { ScrollArea, ScrollBar } from "./components/scroll-area";
 export { DropdownContent, DropdownList, SearchableDropdown, type SearchableDropdownOption, } from "./components/searchable-dropdown";
+export { SearchableSelect, type SearchableSelectProps, } from "./components/searchable-select";
+export { filterSelectKeywords, groupSelectOptions, optionKeywords, toggleSelection, type OptionGroup, type SelectOption, } from "./lib/select-options";
 export { Skeleton } from "./components/skeleton";
 export { Switch } from "./components/switch";
 export { Textarea } from "./components/textarea";
