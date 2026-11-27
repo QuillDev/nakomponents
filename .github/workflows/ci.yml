@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bun run build
+      - run: bun run build:preview
+      - name: Verify committed dist is up to date
+        run: |
+          if [ -n "$(git status --porcelain -- dist)" ]; then
+            echo "dist/ is out of date — run bun run build and commit the result."
+            git status --short -- dist
+            exit 1
+          fi

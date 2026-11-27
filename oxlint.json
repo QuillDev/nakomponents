@@ -1,0 +1,35 @@
+{
+  "plugins": [
+    "react",
+    "react-perf",
+    "typescript",
+    "unicorn",
+    "jsx-a11y",
+    "import",
+    "promise",
+    "oxc"
+  ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "error"
+  },
+  "env": {
+    "browser": true,
+    "es2024": true
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-max-depth": ["error", { "max": 8 }],
+    "react/no-array-index-key": "warn",
+    "react-perf/jsx-no-new-object-as-prop": "off",
+    "react-perf/jsx-no-new-array-as-prop": "off",
+    "react-perf/jsx-no-new-function-as-prop": "off",
+    "eslint/complexity": ["error", { "max": 20 }],
+    "eslint/max-lines-per-function": [
+      "error",
+      { "max": 180, "skipBlankLines": true, "skipComments": true }
+    ],
+    "import/no-unassigned-import": ["error", { "allow": ["**/*.css", "@fontsource*/**"] }]
+  }
+}
