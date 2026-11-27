@@ -16,20 +16,16 @@ import {
   CollapsibleChevron,
   CollapsibleContent,
   CollapsibleTrigger,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  ConfirmDialog,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Input,
-  SearchableDropdown,
+  Modal,
+  MultiSelect,
+  SearchableSelect,
   Skeleton,
   Switch,
   Textarea,
@@ -37,20 +33,75 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  type SelectOption,
 } from "../index";
 
-const MODEL_OPTIONS = [
-  { value: "portal", label: "Portal", detail: "Chat + mesh" },
-  { value: "nanime", label: "Nanime", detail: "Streaming library" },
-  { value: "nanotes", label: "Nanotes", detail: "Synced markdown notes" },
-  { value: "kotoba", label: "Kotoba", detail: "Japanese SRS" },
+const APP_OPTIONS: readonly SelectOption[] = [
+  { value: "portal", label: "Portal", description: "Chat + mesh", group: "Agent" },
+  { value: "nanotes", label: "Nanotes", description: "Synced markdown notes", group: "Apps" },
+  { value: "nanime", label: "Nanime", description: "Streaming library", group: "Apps" },
+  { value: "kotoba", label: "Kotoba", description: "Japanese SRS", group: "Apps" },
 ];
+
+const TAG_OPTIONS: readonly SelectOption[] = [
+  { value: "web", label: "Web", group: "Targets" },
+  { value: "electron", label: "Electron", description: "Desktop shell", group: "Targets" },
+  { value: "android", label: "Android", description: "Kotlin WebView", group: "Targets" },
+  { value: "sqlite", label: "SQLite", group: "Data" },
+  { value: "tailwind", label: "Tailwind v4", group: "Frontend" },
+];
+
+function FeedbackSection() {
+  return (
+    <section className="space-y-3">
+      <h2 className="text-sm font-medium text-muted-foreground">
+        Buttons, Badges, and Feedback
+      </h2>
+      <div className="flex flex-wrap items-center gap-2">
+        <Button>Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="outline">Outline</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="link">Link</Button>
+        <Badge>Active</Badge>
+        <Badge variant="secondary">Secondary</Badge>
+        <Badge variant="outline">Outline</Badge>
+      </div>
+      <div className="grid gap-3">
+        <Alert>
+          <InfoIcon />
+          <AlertTitle>Unified palette</AlertTitle>
+          <AlertDescription>
+            Default surface is #09090b with #db2777 primary actions.
+          </AlertDescription>
+        </Alert>
+        <Alert variant="destructive">
+          <AlertCircleIcon />
+          <AlertTitle>Connection lost</AlertTitle>
+          <AlertDescription>
+            Retrying sync automatically in the background.
+          </AlertDescription>
+        </Alert>
+        <div className="flex items-center gap-3 pt-1">
+          <Skeleton className="size-9 rounded-full" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-3.5 w-48" />
+            <Skeleton className="h-3 w-32" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export function App() {
   const [light, setLight] = useState(false);
   const [enabled, setEnabled] = useState(true);
-  const [app, setApp] = useState("portal");
+  const [app, setApp] = useState<string | null>("portal");
+  const [tags, setTags] = useState<string[]>(["web", "electron", "android"]);
   const [openDetails, setOpenDetails] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [confirmedCount, setConfirmedCount] = useState(0);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -67,7 +118,7 @@ export function App() {
               nakomponents
             </h1>
             <p className="text-sm text-muted-foreground">
-              Near-black default theme and Radix primitives for QuillDev apps.
+              Near-black default theme and plug-and-play controls for QuillDev apps.
             </p>
           </div>
           <Button
@@ -81,85 +132,80 @@ export function App() {
         </header>
 
         <section className="space-y-3">
-          <h2 className="text-sm font-medium text-muted-foreground">Buttons</h2>
-          <div className="flex flex-wrap items-center gap-2">
-            <Button>Primary</Button>
-            <Button variant="secondary">Secondary</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="ghost">Ghost</Button>
-            <Button variant="destructive">Destructive</Button>
-            <Button variant="link">Link</Button>
-            <Button size="sm">Small</Button>
-            <Button size="xs">XS</Button>
-          </div>
-        </section>
-
-        <section className="space-y-3">
-          <h2 className="text-sm font-medium text-muted-foreground">Badges</h2>
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge>Active</Badge>
-            <Badge variant="secondary">Secondary</Badge>
-            <Badge variant="outline">Outline</Badge>
-            <Badge variant="destructive">Error</Badge>
-          </div>
-        </section>
-
-        <section className="space-y-3">
           <h2 className="text-sm font-medium text-muted-foreground">
-            Inputs and Controls
+            Selection Controls
           </h2>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Input placeholder="Search sessions or notes..." />
-            <SearchableDropdown
+            <SearchableSelect
               label="Target app"
               value={app}
-              options={MODEL_OPTIONS}
-              onPick={setApp}
+              options={APP_OPTIONS}
+              onValueChange={setApp}
+              clearable
+            />
+            <MultiSelect
+              label="Platforms and stack"
+              value={tags}
+              options={TAG_OPTIONS}
+              onValueChange={setTags}
+              showSelectAll
             />
           </div>
-          <Textarea placeholder="Write a note..." />
-          <div className="flex items-center gap-4 pt-1">
-            <label className="flex items-center gap-2 text-sm">
-              <Switch
-                checked={enabled}
-                onCheckedChange={setEnabled}
-                label="Enable notifications"
-              />
-              <span>Notifications {enabled ? "on" : "off"}</span>
-            </label>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="sm">
-                  Hover tooltip
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Unified near-black tooltip</TooltipContent>
-            </Tooltip>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Input placeholder="Search sessions or notes..." />
+            <div className="flex items-center gap-4">
+              <label className="flex items-center gap-2 text-sm">
+                <Switch
+                  checked={enabled}
+                  onCheckedChange={setEnabled}
+                  label="Enable notifications"
+                />
+                <span>Notifications {enabled ? "on" : "off"}</span>
+              </label>
+            </div>
           </div>
+          <Textarea placeholder="Write a note..." />
         </section>
 
         <section className="space-y-3">
           <h2 className="text-sm font-medium text-muted-foreground">
-            Overlays and Disclosure
+            Modals, Confirmations, and Menus
           </h2>
           <div className="flex flex-wrap items-center gap-2">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline">Open dialog</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Unified Dialog</DialogTitle>
-                  <DialogDescription>
-                    Shared modal styling across portal, nanime, nanotes, and
-                    kotoba.
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter showCloseButton>
-                  <Button>Confirm</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <Modal
+              open={modalOpen}
+              onOpenChange={setModalOpen}
+              trigger={<Button variant="outline">Open responsive modal</Button>}
+              title="Project Settings"
+              description="Centered dialog on desktop, bottom sheet on mobile."
+              footer={
+                <>
+                  <Button variant="outline" onClick={() => setModalOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={() => setModalOpen(false)}>Save</Button>
+                </>
+              }
+            >
+              <div className="space-y-3">
+                <Input defaultValue="nako-portal" />
+                <MultiSelect
+                  label="Targets"
+                  value={tags}
+                  options={TAG_OPTIONS}
+                  onValueChange={setTags}
+                />
+              </div>
+            </Modal>
+
+            <ConfirmDialog
+              trigger={<Button variant="destructive">Delete item</Button>}
+              title="Delete item?"
+              description="This action cannot be undone."
+              confirmLabel="Delete"
+              variant="destructive"
+              onConfirm={() => setConfirmedCount((count) => count + 1)}
+            />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -175,6 +221,15 @@ export function App() {
               </DropdownMenuContent>
             </DropdownMenu>
 
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  Tooltip
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Unified near-black tooltip</TooltipContent>
+            </Tooltip>
+
             <Collapsible open={openDetails} onOpenChange={setOpenDetails}>
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" size="sm">
@@ -185,40 +240,13 @@ export function App() {
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent className="pt-2 text-sm text-muted-foreground">
-                Collapsible body content rendered with shared primitives.
+                Confirmed actions: {confirmedCount}
               </CollapsibleContent>
             </Collapsible>
           </div>
         </section>
 
-        <section className="space-y-3">
-          <h2 className="text-sm font-medium text-muted-foreground">
-            Feedback and Loading
-          </h2>
-          <div className="grid gap-3">
-            <Alert>
-              <InfoIcon />
-              <AlertTitle>Unified palette</AlertTitle>
-              <AlertDescription>
-                Default surface is #09090b with #db2777 primary actions.
-              </AlertDescription>
-            </Alert>
-            <Alert variant="destructive">
-              <AlertCircleIcon />
-              <AlertTitle>Connection lost</AlertTitle>
-              <AlertDescription>
-                Retrying sync automatically in the background.
-              </AlertDescription>
-            </Alert>
-            <div className="flex items-center gap-3 pt-1">
-              <Skeleton className="size-9 rounded-full" />
-              <div className="flex-1 space-y-2">
-                <Skeleton className="h-3.5 w-48" />
-                <Skeleton className="h-3 w-32" />
-              </div>
-            </div>
-          </div>
-        </section>
+        <FeedbackSection />
       </div>
     </TooltipProvider>
   );

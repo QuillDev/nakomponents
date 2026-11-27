@@ -1,0 +1,21 @@
+import { type ReactNode } from "react";
+import { type SelectOption } from "../lib/select-options";
+export type SearchableSelectProps<T extends string = string> = {
+    readonly value: T | null | undefined;
+    readonly options: readonly SelectOption<T>[];
+    readonly onValueChange: (value: T | null) => void;
+    readonly label?: string;
+    readonly placeholder?: string;
+    readonly searchPlaceholder?: string;
+    readonly emptyText?: string;
+    readonly clearable?: boolean;
+    readonly disabled?: boolean;
+    readonly loading?: boolean;
+    readonly icon?: ReactNode;
+    readonly className?: string;
+    readonly contentClassName?: string;
+    readonly side?: "top" | "bottom";
+    readonly align?: "start" | "center" | "end";
+};
+declare function SearchableSelect<T extends string = string>({ value, options, onValueChange, label, placeholder, searchPlaceholder, emptyText, clearable, disabled, loading, icon, className, contentClassName, side, align, }: SearchableSelectProps<T>): import("react").JSX.Element;
+export { SearchableSelect };
